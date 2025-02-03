@@ -534,6 +534,7 @@
             init: function (options) {
                 document.body.style.visibility = '';
                 Telegram.WebApp.ready();
+                this.fullscreenInit(); // Initialize fullscreen functionality
             },
 
             close() {
@@ -559,19 +560,54 @@
             },
             fullscreenInit() {
                 Telegram.WebApp.onEvent('fullscreenChanged', function () {
-                    DemoApp.updateFullscreenButton()
-                })
+                    DemoApp.updateFullscreenButton();
+                });
                 Telegram.WebApp.onEvent('fullscreenFailed', function (params) {
-                    DemoApp.showAlert('fullscreenFailed: ' + params.error)
-                })
-                DemoApp.updateFullscreenButton()
+                    DemoApp.showAlert('fullscreenFailed: ' + params.error);
+                });
+
+                // Load the fullscreen state from cloud storage
+                Telegram.WebApp.CloudStorage.getItem('fullscreen', function (err, value) {
+                    if (!err && value) {
+                        const fullscreenBtn = document.getElementById('fullscreen_btn');
+                        if (value === 'yes') {
+                            Telegram.WebApp.requestFullscreen();
+                            fullscreenBtn.innerHTML = 'Exit Fullscreen';
+                        } else {
+                            Telegram.WebApp.exitFullscreen();
+                            fullscreenBtn.innerHTML = 'Request Fullscreen';
+                        }
+                    }
+                });
+
+                DemoApp.updateFullscreenButton();
             },
             toggleFullscreen(el) {
                 if (Telegram.WebApp.isFullscreen) {
-                    Telegram.WebApp.exitFullscreen()
+                    Telegram.WebApp.exitFullscreen();
+                    this.saveFullscreenState('no'); // Save 'no' when exiting fullscreen
                 } else {
-                    Telegram.WebApp.requestFullscreen()
+                    Telegram.WebApp.requestFullscreen();
+                    this.saveFullscreenState('yes'); // Save 'yes' when entering fullscreen
                 }
+            },
+            saveFullscreenState(state) {
+                const key = 'fullscreen';
+                const value = state;
+
+                Telegram.WebApp.CloudStorage.setItem(key, value, function (err, saved) {
+                    if (err) {
+                        DemoApp.showAlert('Error: ' + err);
+                    } else {
+                        if (saved) {
+                            if (typeof DemoApp.cloudStorageItems[key] === 'undefined') {
+                                DemoApp.cloudStorageKeys.push(key);
+                            }
+                            DemoApp.cloudStorageItems[key] = value;
+                        }
+                        DemoApp.updateCloudRows();
+                    }
+                });
             },
             updateFullscreenButton() {
                 const fullscreenBtn = document.getElementById('fullscreen_btn')
