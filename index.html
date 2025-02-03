@@ -433,7 +433,7 @@
 <body class="" style="visibility: hidden;">
 
     <section id="top_sect" class="second">
-        <button id="fullscreen_btn" onclick="DemoApp.toggleFullscreen(this);">Request Fullscreen</button>
+        <button id="fullscreen_btn" onclick="DemoApp.toggleFullscreen(this);">Change Fullscreen</button>
 
         <div class="sect_row">Header: <input type="color" id="header_color_input" />
             <select id="header_color_sel">
@@ -570,7 +570,7 @@
                             fullscreenBtn.innerHTML = 'Exit Fullscreen';
                         } else {
                             Telegram.WebApp.exitFullscreen();
-                            fullscreenBtn.innerHTML = 'Request Fullscreen';
+                            fullscreenBtn.innerHTML = 'Change Fullscreen';
                         }
                     }
                 });
@@ -593,14 +593,8 @@
                 Telegram.WebApp.CloudStorage.setItem(key, value, function (err, saved) {
                     if (err) {
                         DemoApp.showAlert('Error: ' + err);
-                    } else {
-                        if (saved) {
-                            if (typeof DemoApp.cloudStorageItems[key] === 'undefined') {
-                                DemoApp.cloudStorageKeys.push(key);
-                            }
-                            DemoApp.cloudStorageItems[key] = value;
-                        }
-                        DemoApp.updateCloudRows();
+                    } else if (saved) {
+                        console.log('Fullscreen state saved:', value);
                     }
                 });
             },
@@ -609,17 +603,9 @@
                 if (Telegram.WebApp.isFullscreen) {
                     fullscreenBtn.innerHTML = 'Exit Fullscreen'
                 } else {
-                    fullscreenBtn.innerHTML = 'Request Fullscreen'
+                    fullscreenBtn.innerHTML = 'Change Fullscreen'
                 }
             },
-
-            // accelerometer
-
-            // device orientation
-
-            // gyroscope
-
-            // location
 
             // version to string Example: '6.9'
             doesntSupport(version) {
