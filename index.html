@@ -364,8 +364,8 @@
 <body class="" style="visibility: hidden;">
 
 <section id="top_sect" class="second">
-    <button id="fullscreen_btn" onclick="DemoApp.toggleFullscreen(this);">Request Fullscreen</button>
     <button id="orient_btn" onclick="DemoApp.toggleOrientationLock(this);">Lock Orientation</button>
+    <button id="fullscreen_btn" onclick="DemoApp.toggleFullscreen(this);">Request Fullscreen</button>
     <input type="text" placeholder="Input text in regular input..." id="regular_field" />
     
     <div class="sect_row">Header: <input type="color" id="header_color_input" />
@@ -437,15 +437,7 @@
 
 
     <pre><code id="webview_data"></code></pre>
-    <div class="hint">
-        Data passed to webview.
-        <span id="webview_data_status" class="status_need">Checking hash...</span>,
-        <span id="webview_data_sign_status">checking signature...</span>
-    </div>
     <pre><code id="theme_data"></code></pre>
-    <div class="hint">
-        Theme params
-    </div>
     <div class="hint">
         Version: <span id="ver"></span>,
         platform: <span id="platform"></span>
@@ -1029,28 +1021,13 @@
             DemoApp.loadCloudKeys();
         } catch (e) { }
         try {
-            DemoApp.biometricInit();
-        } catch (e) { }
-        try {
             DemoApp.fullscreenInit();
-        } catch (e) { }
-        try {
-            DemoApp.accelerometerInit();
         } catch (e) { }
         try {
             DemoApp.deviceOrientationInit();
         } catch (e) { }
         try {
-            DemoApp.gyroscopeInit();
-        } catch (e) { }
-        try {
-            DemoApp.locationInit();
-        } catch (e) { }
-        try {
             DemoApp.homeScreenInit();
-        } catch (e) { }
-        try {
-            DemoApp.emojiStatusInit();
         } catch (e) { }
         try {
             DemoApp.activityInit();
