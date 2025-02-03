@@ -341,10 +341,10 @@
 
         .tg-safe-area-border {
             position: fixed;
-            left: var(--tg-safe-area-inset-left, 200px);
-            right: var(--tg-safe-area-inset-right, 200px);
-            top: var(--tg-safe-area-inset-top, 200px);
-            bottom: var(--tg-safe-area-inset-bottom, 200px);
+            left: var(--tg-safe-area-inset-left, 0);
+            right: var(--tg-safe-area-inset-right, 0);
+            top: var(--tg-safe-area-inset-top, 0);
+            bottom: var(--tg-safe-area-inset-bottom, 0);
             pointer-events: none;
         }
 
@@ -818,7 +818,6 @@
 
     <div class="safe-area-border"></div>
     <div class="tg-safe-area-border">
-        <div class="tg-content-safe-area-border"></div>
     </div>
     <div class="viewport-border"></div>
     <div class="viewport-stable_border"></div>
