@@ -534,6 +534,7 @@
             init: function (options) {
                 document.body.style.visibility = '';
                 Telegram.WebApp.ready();
+                this.fullscreenInit(); // Initialize fullscreen functionality
             },
 
             close() {
@@ -561,8 +562,14 @@
                 Telegram.WebApp.onEvent('fullscreenChanged', function () {
                     DemoApp.updateFullscreenButton();
                 });
+
                 Telegram.WebApp.onEvent('fullscreenFailed', function (params) {
-                    DemoApp.showAlert('fullscreenFailed: ' + params.error);
+                    if (params.error === 'ALREADY_FULLSCREEN') {
+                        // If already in fullscreen, update the button text
+                        DemoApp.updateFullscreenButton();
+                    } else {
+                        DemoApp.showAlert('fullscreenFailed: ' + params.error);
+                    }
                 });
 
                 // Load the fullscreen state from cloud storage
