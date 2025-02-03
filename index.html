@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini Apps 2.0</title>
+    <title>Telegram Mini Apps 2.0 - Full-Screen</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -26,18 +26,27 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
+        /* Top menu bar */
         .top-bar {
             width: 100%;
             background-color: var(--tg-theme-button-color, #0088cc);
             color: var(--tg-theme-button-text-color, #ffffff);
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             padding: 15px;
             position: fixed;
             top: 0;
             left: 0;
             z-index: 1000;
+        }
+
+        .top-bar button {
+            background: transparent;
+            border: none;
+            color: var(--tg-theme-button-text-color, #ffffff);
+            font-size: 16px;
+            cursor: pointer;
         }
 
         .content {
@@ -62,7 +71,12 @@
     </style>
 </head>
 <body>
-    <div class="top-bar">Mini Apps 2.0 - Full-Screen</div>
+    <div class="top-bar">
+        <button onclick="goBack()">🔙 Back</button>
+        <span>Mini Apps 2.0</span>
+        <button onclick="toggleFullScreen()">🔳 Full-Screen</button>
+    </div>
+
     <div class="content">
         <button class="button" onclick="showAlert()">Click Me</button>
     </div>
@@ -71,11 +85,23 @@
         // Ensure Telegram WebApp is initialized
         Telegram.WebApp.ready();
 
-        // Enable full-screen mode
+        // Enable full-screen mode by default
         Telegram.WebApp.expand();
 
         function showAlert() {
             Telegram.WebApp.showAlert("Hello from Mini App 2.0!");
+        }
+
+        function toggleFullScreen() {
+            if (Telegram.WebApp.isExpanded) {
+                Telegram.WebApp.viewportStableHeight = 0;
+            } else {
+                Telegram.WebApp.expand();
+            }
+        }
+
+        function goBack() {
+            Telegram.WebApp.close();
         }
 
         function updateTheme() {
