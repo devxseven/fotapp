@@ -434,8 +434,6 @@
 
     <section id="top_sect" class="second">
         <button id="fullscreen_btn" onclick="DemoApp.toggleFullscreen(this);">Request Fullscreen</button>
-        <button id="orient_btn" onclick="DemoApp.toggleOrientationLock(this);">Lock Orientation</button>
-        <input type="text" placeholder="Input text in regular input..." id="regular_field" />
 
         <div class="sect_row">Header: <input type="color" id="header_color_input" />
             <select id="header_color_sel">
@@ -547,15 +545,6 @@
                 } else {
                     Telegram.WebApp.enableVerticalSwipes()
                     el.innerHTML = 'Disable Vertical Swypes'
-                }
-            },
-            toggleOrientationLock(el) {
-                if (Telegram.WebApp.isOrientationLocked) {
-                    Telegram.WebApp.unlockOrientation()
-                    el.innerHTML = 'Lock Orientation'
-                } else {
-                    Telegram.WebApp.lockOrientation()
-                    el.innerHTML = 'Unlock Orientation'
                 }
             },
             fullscreenInit() {
@@ -977,14 +966,7 @@
 
         document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
         document.getElementById('regular_link').setAttribute('href', document.getElementById('regular_link').getAttribute('href') + location.hash);
-        document.getElementById('regular_field').addEventListener('input', function (e) {
-            const val = this.value.toLowerCase();
-            if (val.indexOf('progress') >= 0) {
-                Telegram.WebApp.MainButton.showProgress();
-            } else {
-                Telegram.WebApp.MainButton.hideProgress();
-            }
-        });
+
 
         document.getElementById('ver').innerHTML = Telegram.WebApp.version;
         document.getElementById('platform').innerHTML = Telegram.WebApp.platform;
@@ -1097,13 +1079,6 @@
             document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor)
         })
 
-        const orientBtn = document.getElementById('orient_btn')
-        if (Telegram.WebApp.isOrientationLocked) {
-            orientBtn.innerHTML = 'Unlock Orientation'
-        } else {
-            orientBtn.innerHTML = 'Lock Orientation'
-        }
-
         // permissions
 
         // permissions
@@ -1114,28 +1089,13 @@
             DemoApp.loadCloudKeys();
         } catch (e) { }
         try {
-            DemoApp.biometricInit();
-        } catch (e) { }
-        try {
             DemoApp.fullscreenInit();
-        } catch (e) { }
-        try {
-            DemoApp.accelerometerInit();
         } catch (e) { }
         try {
             DemoApp.deviceOrientationInit();
         } catch (e) { }
         try {
-            DemoApp.gyroscopeInit();
-        } catch (e) { }
-        try {
-            DemoApp.locationInit();
-        } catch (e) { }
-        try {
             DemoApp.homeScreenInit();
-        } catch (e) { }
-        try {
-            DemoApp.emojiStatusInit();
         } catch (e) { }
         try {
             DemoApp.activityInit();
