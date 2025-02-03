@@ -365,6 +365,7 @@
 
 <section id="top_sect" class="second">
     <button id="fullscreen_btn" onclick="DemoApp.toggleFullscreen(this);">Request Fullscreen</button>
+    <button id="orient_btn" onclick="DemoApp.toggleOrientationLock(this);">Lock Orientation</button>
     <input type="text" placeholder="Input text in regular input..." id="regular_field" />
     
     <div class="sect_row">Header: <input type="color" id="header_color_input" />
@@ -436,8 +437,17 @@
 
 
     <pre><code id="webview_data"></code></pre>
+    <div class="hint">
+        Data passed to webview.
+        <span id="webview_data_status" class="status_need">Checking hash...</span>,
+        <span id="webview_data_sign_status">checking signature...</span>
+    </div>
     <pre><code id="theme_data"></code></pre>
     <div class="hint">
+        Theme params
+    </div>
+    <div class="hint">
+        Version: <span id="ver"></span>,
         platform: <span id="platform"></span>
     </div>
     <div class="hint">
@@ -464,6 +474,24 @@
         
         close() {
             Telegram.WebApp.close();
+        },
+        toggleSwipeBehavior(el) {
+            if (Telegram.WebApp.isVerticalSwipesEnabled) {
+                Telegram.WebApp.disableVerticalSwipes()
+                el.innerHTML = 'Enable Vertical Swypes'
+            } else {
+                Telegram.WebApp.enableVerticalSwipes()
+                el.innerHTML = 'Disable Vertical Swypes'
+            }
+        },
+        toggleOrientationLock(el) {
+            if (Telegram.WebApp.isOrientationLocked) {
+                Telegram.WebApp.unlockOrientation()
+                el.innerHTML = 'Lock Orientation'
+            } else {
+                Telegram.WebApp.lockOrientation()
+                el.innerHTML = 'Unlock Orientation'
+            }
         },
         fullscreenInit() {
             Telegram.WebApp.onEvent('fullscreenChanged', function() {
@@ -499,9 +527,76 @@
         // location
 
         // version to string Example: '6.9'
+        doesntSupport(version) {
+            // console.log("version: " + version);
+            // console.log("realVersion: " + this.version());
+            // console.log("doesntSupport: " + this.isVersionAtLeast(version));
+            if (!this.isVersionAtLeast(version)) {
+                Telegram.WebApp.showAlert('This feature is not supported in this version of Telegram', function () {
+                    Telegram.WebApp.close();
+                });
+                throw new Error('This feature is not supported in this version of Telegram');
+            }
+        },
 
         // actions
 
+        changeMenuButton(close) {
+            document.querySelectorAll('button').forEach((btn) => btn.disabled = true);
+            const btnStatus       = document.querySelector('#btn_status');
+            btnStatus.textContent = 'Changing button...';
+
+            DemoApp.apiRequest('changeMenuButton', {}, function (result) {
+                document.querySelectorAll('button').forEach((btn) => btn.disabled = false);
+
+                if (result.response) {
+                    if (result.response.ok) {
+                        btnStatus.textContent   = 'Button changed!';
+                        btnStatus.className     = 'ok';
+                        btnStatus.style.display = 'block';
+                        Telegram.WebApp.close();
+                    } else {
+                        btnStatus.textContent   = result.response.description;
+                        btnStatus.className     = 'err';
+                        btnStatus.style.display = 'block';
+                        alert(result.response.description);
+                    }
+                } else if (result.error) {
+                    btnStatus.textContent   = result.error;
+                    btnStatus.className     = 'err';
+                    btnStatus.style.display = 'block';
+                    alert(result.error);
+                } else {
+                    btnStatus.textContent   = 'Unknown error';
+                    btnStatus.className     = 'err';
+                    btnStatus.style.display = 'block';
+                    alert('Unknown error');
+                }
+            });
+            if (close) {
+                setTimeout(function () {
+                    Telegram.WebApp.close();
+                }, 50);
+            }
+        },
+        checkInitData() {
+            const webViewStatus = document.querySelector('#webview_data_status');
+            if (DemoApp.initDataUnsafe.query_id &&
+                DemoApp.initData &&
+                webViewStatus.classList.contains('status_need')
+            ) {
+                webViewStatus.classList.remove('status_need');
+                DemoApp.apiRequest('checkInitData', {}, function (result) {
+                    if (result.ok) {
+                        webViewStatus.textContent = 'Hash is correct (async)';
+                        webViewStatus.className   = 'ok';
+                    } else {
+                        webViewStatus.textContent = result.error + ' (async)';
+                        webViewStatus.className   = 'err';
+                    }
+                });
+            }
+        },
         
         switchInlineQuery(query, chooseChat) {
             if (chooseChat) {
@@ -681,6 +776,46 @@
                 prevActivityElement.innerHTML = ', <br>previously was active for <b>' + Math.round(prevDuration / 1000) + '</b> sec';
             }
         },
+
+
+        // Other
+        apiRequest(method, data, onCallback) {
+            // DISABLE BACKEND FOR FRONTEND DEMO
+            // YOU CAN USE YOUR OWN REQUESTS TO YOUR OWN BACKEND
+            // CHANGE THIS CODE TO YOUR OWN
+            return onCallback && onCallback({error: 'This function (' + method + ') should send requests to your backend. Please, change this code to your own.'});
+
+            const authData = DemoApp.initData || '';
+            fetch('/demo/api', {
+                method     : 'POST',
+                body       : JSON.stringify(Object.assign(data, {
+                    _auth : authData,
+                    method: method,
+                })),
+                credentials: 'include',
+                headers    : {
+                    'Content-Type': 'application/json'
+                }
+            }).then(function (response) {
+                return response.json();
+            }).then(function (result) {
+                onCallback && onCallback(result);
+            }).catch(function (error) {
+                onCallback && onCallback({error: 'Server error'});
+            });
+        },
+        downloadFile: function(el, url, file_name) {
+            Telegram.WebApp.downloadFile({url: url, file_name: file_name}, function(result) {
+                const span = el.nextElementSibling;
+                if (result) {
+                    span.textContent = '(downloading...)';
+                    span.className = 'ok';
+                } else {
+                    span.textContent = '(declined)';
+                    span.className = 'err';
+                }
+            });
+        },
     }
 
     const DemoAppMenu = {
@@ -699,7 +834,7 @@
             });
             document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
             document.getElementById('theme_data').innerHTML   = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
-            //DemoApp.checkInitData();
+            DemoApp.checkInitData();
         }
     };
 
@@ -710,6 +845,30 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/\n/g, '<br/>')
+    }
+
+    function byteLength(str) {
+        if (window.Blob) {
+            try {
+                return new Blob([str]).size;
+            } catch (e) {
+            }
+        }
+
+        let s = str.length;
+        for (let i = str.length - 1; i >= 0; i--) {
+            const code = str.charCodeAt(i);
+            if (code > 0x7f && code <= 0x7ff) {
+                s++;
+            } else if (code > 0x7ff && code <= 0xffff) {
+                s += 2;
+            }
+
+            if (code >= 0xDC00 && code <= 0xDFFF) {
+                i--;
+            }
+        }
+        return s;
     }
 
     function round(val, d) {
@@ -741,9 +900,10 @@
         }
     });
 
+    document.getElementById('ver').innerHTML      = Telegram.WebApp.version;
     document.getElementById('platform').innerHTML = Telegram.WebApp.platform;
 
-    //DemoApp.checkInitData();
+    DemoApp.checkInitData();
     DemoApp.init();
     Telegram.WebApp.setHeaderColor('secondary_bg_color');
 
