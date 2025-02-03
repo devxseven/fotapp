@@ -650,89 +650,89 @@
 
         // Permissions
 
-        // cloud storage
-        cloudStorageKeys: {},
-        cloudStorageItems: {},
-        editCloudRow(el, event) {
-            event.preventDefault();
-            const values = DemoApp.cloudStorageItems
-            const key = el.closest('tr').getAttribute('data-key')
-            el.form.reset();
-            el.form.key.value = key;
-            el.form.value.value = values[key];
-        },
-        deleteCloudRow(el, event) {
-            event.preventDefault();
-            const key = el.closest('tr').getAttribute('data-key')
-            Telegram.WebApp.CloudStorage.removeItem(key, function(err, deleted) {
-                if (err) {
-                    DemoApp.showAlert('Error: ' + err);
-                } else {
-                    if (deleted) {
-                        const index = DemoApp.cloudStorageKeys.indexOf(key);
-                        if (index >= 0) {
-                            DemoApp.cloudStorageKeys.splice(index, 1);
-                        }
-                        delete DemoApp.cloudStorageItems[key];
-                    }
-                    el.form.reset();
-                    DemoApp.updateCloudRows();
-                }
-            });
-        },
-        saveCloudForm(form, event) {
-            event.preventDefault();
-            const key = form.key.value
-            const value = form.value.value
-            Telegram.WebApp.CloudStorage.setItem(key, value, function(err, saved) {
-                if (err) {
-                    DemoApp.showAlert('Error: ' + err);
-                } else {
-                    if (saved) {
-                        if (typeof DemoApp.cloudStorageItems[key] === 'undefined') {
-                            DemoApp.cloudStorageKeys.push(key);
-                        }
-                        DemoApp.cloudStorageItems[key] = value;
-                    }
-                    form.reset();
-                    DemoApp.updateCloudRows();
-                }
-            });
-        },
-        updateCloudRows() {
-            let html = '';
-            const keys = DemoApp.cloudStorageKeys;
-            const values = DemoApp.cloudStorageItems;
-            for (let i = 0; i < keys.length; i++) {
-                const key = keys[i];
-                html += '<tr data-key="'+cleanHTML(key)+'"><td>'+cleanHTML(key)+'</td><td>'+cleanHTML(values[key])+'</td><td><button onclick="DemoApp.editCloudRow(this, event);">Edit</button><button onclick="DemoApp.deleteCloudRow(this, event);">Delete</button></td></tr>';
-            }
-
-            document.getElementById('cloud_rows').innerHTML = html
-        },
-        loadCloudKeys(el) {
-            Telegram.WebApp.CloudStorage.getKeys(function(err, keys) {
-                if (err) {
-                    DemoApp.showAlert('Error: ' + err);
-                } else {
-                    if (keys.length > 0) {
-                        Telegram.WebApp.CloudStorage.getItems(keys, function(err, values) {
-                            if (err) {
-                                DemoApp.showAlert('Error: ' + err);
-                            } else {
-                                DemoApp.cloudStorageKeys = keys;
-                                DemoApp.cloudStorageItems = {};
-                                for (let i = 0; i < keys.length; i++) {
-                                    const key = keys[i];
-                                    DemoApp.cloudStorageItems[key] = values[key];
-                                }
-                                DemoApp.updateCloudRows();
+            // cloud storage
+            cloudStorageKeys: {},
+            cloudStorageItems: {},
+            editCloudRow(el, event) {
+                event.preventDefault();
+                const values = DemoApp.cloudStorageItems
+                const key = el.closest('tr').getAttribute('data-key')
+                el.form.reset();
+                el.form.key.value = key;
+                el.form.value.value = values[key];
+            },
+            deleteCloudRow(el, event) {
+                event.preventDefault();
+                const key = el.closest('tr').getAttribute('data-key')
+                Telegram.WebApp.CloudStorage.removeItem(key, function (err, deleted) {
+                    if (err) {
+                        DemoApp.showAlert('Error: ' + err);
+                    } else {
+                        if (deleted) {
+                            const index = DemoApp.cloudStorageKeys.indexOf(key);
+                            if (index >= 0) {
+                                DemoApp.cloudStorageKeys.splice(index, 1);
                             }
-                        });
+                            delete DemoApp.cloudStorageItems[key];
+                        }
+                        el.form.reset();
+                        DemoApp.updateCloudRows();
                     }
+                });
+            },
+            saveCloudForm(form, event) {
+                event.preventDefault();
+                const key = form.key.value
+                const value = form.value.value
+                Telegram.WebApp.CloudStorage.setItem(key, value, function (err, saved) {
+                    if (err) {
+                        DemoApp.showAlert('Error: ' + err);
+                    } else {
+                        if (saved) {
+                            if (typeof DemoApp.cloudStorageItems[key] === 'undefined') {
+                                DemoApp.cloudStorageKeys.push(key);
+                            }
+                            DemoApp.cloudStorageItems[key] = value;
+                        }
+                        form.reset();
+                        DemoApp.updateCloudRows();
+                    }
+                });
+            },
+            updateCloudRows() {
+                let html = '';
+                const keys = DemoApp.cloudStorageKeys;
+                const values = DemoApp.cloudStorageItems;
+                for (let i = 0; i < keys.length; i++) {
+                    const key = keys[i];
+                    html += '<tr data-key="' + cleanHTML(key) + '"><td>' + cleanHTML(key) + '</td><td>' + cleanHTML(values[key]) + '</td><td><button onclick="DemoApp.editCloudRow(this, event);">Edit</button><button onclick="DemoApp.deleteCloudRow(this, event);">Delete</button></td></tr>';
                 }
-            });
-        },
+
+                document.getElementById('cloud_rows').innerHTML = html
+            },
+            loadCloudKeys(el) {
+                Telegram.WebApp.CloudStorage.getKeys(function (err, keys) {
+                    if (err) {
+                        DemoApp.showAlert('Error: ' + err);
+                    } else {
+                        if (keys.length > 0) {
+                            Telegram.WebApp.CloudStorage.getItems(keys, function (err, values) {
+                                if (err) {
+                                    DemoApp.showAlert('Error: ' + err);
+                                } else {
+                                    DemoApp.cloudStorageKeys = keys;
+                                    DemoApp.cloudStorageItems = {};
+                                    for (let i = 0; i < keys.length; i++) {
+                                        const key = keys[i];
+                                        DemoApp.cloudStorageItems[key] = values[key];
+                                    }
+                                    DemoApp.updateCloudRows();
+                                }
+                            });
+                        }
+                    }
+                });
+            },
 
         // biometrics
         
