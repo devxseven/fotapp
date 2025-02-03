@@ -462,48 +462,14 @@
     <section>
         <div id="btn_status" class="hint" style="display: none;"></div>
 
-        <p>Test links:</p>
+        <!-- <p>Test links:</p>
         <ul>
             <li><a id="regular_link" href="?nextpage=1">Regular link #1</a> (opens inside webview)</li>
             <li><a href="javascript:Telegram.WebApp.openLink('https://ton.org/');">Open link in external browser</a>
             </li>
             <li><a href="javascript:Telegram.WebApp.openLink('https://google.com/');">web_app_open_link()</a> (opens
                 outside webview)</li>
-        </ul>
-
-        <p>Test alerts:</p>
-        <div class="columns">
-            <ul>
-                <li><a href="javascript:;" onclick="DemoApp.showAlert('Hello!');">showAlert</a></li>
-                <li><a href="javascript:;" onclick="DemoApp.showConfirm('Are you sure?');">showConfirm</a></li>
-                <li><a href="javascript:;" onclick="DemoApp.showPopup();">showPopup</a></li>
-            </ul>
-        </div>
-
-        <p>Cloud storage:</p>
-        <form onsubmit="DemoApp.saveCloudForm(this, event);">
-            <table class="table table-bordered small">
-                <thead>
-                    <tr>
-                        <th width="20%">Key</th>
-                        <th width="70%">Value</th>
-                        <th width="10%"></th>
-                    </tr>
-                </thead>
-                <tbody id="cloud_rows"></tbody>
-                <tfoot>
-                    <tr>
-                        <td><input type="text" name="key" /></td>
-                        <td><input type="text" name="value" /></td>
-                        <td>
-                            <button type="submit">Save</button>
-                            <button type="reset">Clear</button>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-        </form>
-
+        </ul> -->
 
         <pre><code id="webview_data"></code></pre>
         <pre><code id="theme_data"></code></pre>
@@ -709,99 +675,6 @@
                     }
                 });
             },
-
-            // Permissions
-
-            // cloud storage
-            cloudStorageKeys: {},
-            cloudStorageItems: {},
-            editCloudRow(el, event) {
-                event.preventDefault();
-                const values = DemoApp.cloudStorageItems
-                const key = el.closest('tr').getAttribute('data-key')
-                el.form.reset();
-                el.form.key.value = key;
-                el.form.value.value = values[key];
-            },
-            deleteCloudRow(el, event) {
-                event.preventDefault();
-                const key = el.closest('tr').getAttribute('data-key')
-                Telegram.WebApp.CloudStorage.removeItem(key, function (err, deleted) {
-                    if (err) {
-                        DemoApp.showAlert('Error: ' + err);
-                    } else {
-                        if (deleted) {
-                            const index = DemoApp.cloudStorageKeys.indexOf(key);
-                            if (index >= 0) {
-                                DemoApp.cloudStorageKeys.splice(index, 1);
-                            }
-                            delete DemoApp.cloudStorageItems[key];
-                        }
-                        el.form.reset();
-                        DemoApp.updateCloudRows();
-                    }
-                });
-            },
-            saveCloudForm(form, event) {
-                event.preventDefault();
-                const key = form.key.value
-                const value = form.value.value
-                Telegram.WebApp.CloudStorage.setItem(key, value, function (err, saved) {
-                    if (err) {
-                        DemoApp.showAlert('Error: ' + err);
-                    } else {
-                        if (saved) {
-                            if (typeof DemoApp.cloudStorageItems[key] === 'undefined') {
-                                DemoApp.cloudStorageKeys.push(key);
-                            }
-                            DemoApp.cloudStorageItems[key] = value;
-                        }
-                        form.reset();
-                        DemoApp.updateCloudRows();
-                    }
-                });
-            },
-            updateCloudRows() {
-                let html = '';
-                const keys = DemoApp.cloudStorageKeys;
-                const values = DemoApp.cloudStorageItems;
-                for (let i = 0; i < keys.length; i++) {
-                    const key = keys[i];
-                    html += '<tr data-key="' + cleanHTML(key) + '"><td>' + cleanHTML(key) + '</td><td>' + cleanHTML(values[key]) + '</td><td><button onclick="DemoApp.editCloudRow(this, event);">Edit</button><button onclick="DemoApp.deleteCloudRow(this, event);">Delete</button></td></tr>';
-                }
-
-                document.getElementById('cloud_rows').innerHTML = html
-            },
-            loadCloudKeys(el) {
-                Telegram.WebApp.CloudStorage.getKeys(function (err, keys) {
-                    if (err) {
-                        DemoApp.showAlert('Error: ' + err);
-                    } else {
-                        if (keys.length > 0) {
-                            Telegram.WebApp.CloudStorage.getItems(keys, function (err, values) {
-                                if (err) {
-                                    DemoApp.showAlert('Error: ' + err);
-                                } else {
-                                    DemoApp.cloudStorageKeys = keys;
-                                    DemoApp.cloudStorageItems = {};
-                                    for (let i = 0; i < keys.length; i++) {
-                                        const key = keys[i];
-                                        DemoApp.cloudStorageItems[key] = values[key];
-                                    }
-                                    DemoApp.updateCloudRows();
-                                }
-                            });
-                        }
-                    }
-                });
-            },
-
-            // biometrics
-
-            // home screen
-
-
-            // emoji status
 
             // activity
             activityStartTime: new Date(),
@@ -1069,19 +942,7 @@
 
         // permissions
         try {
-            DemoApp.testClipboard(document.getElementById('clipboard_test'));
-        } catch (e) { }
-        try {
-            DemoApp.loadCloudKeys();
-        } catch (e) { }
-        try {
             DemoApp.fullscreenInit();
-        } catch (e) { }
-        try {
-            DemoApp.deviceOrientationInit();
-        } catch (e) { }
-        try {
-            DemoApp.homeScreenInit();
         } catch (e) { }
         try {
             DemoApp.activityInit();
