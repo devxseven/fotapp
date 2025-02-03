@@ -469,7 +469,17 @@
             </li>
             <li><a href="javascript:Telegram.WebApp.openLink('https://google.com/');">web_app_open_link()</a> (opens
                 outside webview)</li>
-        </ul> -->
+        </ul>
+
+        <p>Test alerts:</p>
+        <div class="columns">
+            <ul>
+                <li><a href="javascript:;" onclick="DemoApp.showAlert('Hello!');">showAlert</a></li>
+                <li><a href="javascript:;" onclick="DemoApp.showConfirm('Are you sure?');">showConfirm</a></li>
+                <li><a href="javascript:;" onclick="DemoApp.showPopup();">showPopup</a></li>
+            </ul>
+        </div> -->
+
 
         <pre><code id="webview_data"></code></pre>
         <pre><code id="theme_data"></code></pre>
@@ -675,6 +685,16 @@
                     }
                 });
             },
+
+            // Permissions
+
+        
+            // biometrics
+
+            // home screen
+
+
+            // emoji status
 
             // activity
             activityStartTime: new Date(),
@@ -942,7 +962,19 @@
 
         // permissions
         try {
+            DemoApp.testClipboard(document.getElementById('clipboard_test'));
+        } catch (e) { }
+        try {
+            DemoApp.loadCloudKeys();
+        } catch (e) { }
+        try {
             DemoApp.fullscreenInit();
+        } catch (e) { }
+        try {
+            DemoApp.deviceOrientationInit();
+        } catch (e) { }
+        try {
+            DemoApp.homeScreenInit();
         } catch (e) { }
         try {
             DemoApp.activityInit();
