@@ -120,72 +120,6 @@
             text-transform: uppercase;
         }
 
-        table.table-condensed button {
-            display: inline-block;
-            width: auto;
-            font-size: 12px;
-            margin: 0 2px 2px 0;
-            padding: 2px 7px;
-        }
-
-        .table-bordered>tfoot>tr>th,
-        .table-bordered>tfoot>tr>td {
-            border-top-width: 2px;
-        }
-
-        input[type="text"],
-        .input[contenteditable] {
-            display: block;
-            box-sizing: border-box;
-            font-size: 14px;
-            width: 100%;
-            padding: 12px 20px;
-            margin: 15px 0;
-            border: 1px solid var(--tg-theme-link-color, #000);
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            border-radius: 4px;
-            color: var(--tg-theme-text-color, #222222);
-            text-align: start;
-        }
-
-        input[type="text"]::-webkit-input-placeholder {
-            color: var(--tg-theme-hint-color, #ccc);
-        }
-
-        input[type="text"]::-moz-placeholder {
-            color: var(--tg-theme-hint-color, #ccc);
-        }
-
-        input[type="text"]:-ms-input-placeholder {
-            color: var(--tg-theme-hint-color, #ccc);
-        }
-
-        .input[data-placeholder] {
-            position: relative;
-        }
-
-        .input[data-placeholder]:empty:before {
-            position: absolute;
-            left: 0;
-            right: 0;
-            content: attr(data-placeholder);
-            color: var(--tg-theme-hint-color, #ccc);
-            padding: 0 20px;
-            font-weight: normal;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        table.table-condensed input[type="text"] {
-            font-size: 12px;
-            padding: 5px;
-            margin: 0;
-            border-color: #eee;
-        }
-
         section {
             padding: 15px;
             text-align: center;
@@ -215,21 +149,6 @@
             margin: 40px 0 15px;
         }
 
-        ul {
-            text-align: left;
-            word-break: break-word;
-        }
-
-        li {
-            color: var(--tg-theme-hint-color, #a8a8a8);
-        }
-
-        textarea {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 7px;
-        }
-
         pre {
             background: rgba(0, 0, 0, .07);
             color: var(--tg-theme-text-color, #222);
@@ -248,21 +167,6 @@
             background: rgba(255, 255, 255, .15);
         }
 
-        .chat_img {
-            width: 30px;
-            border-radius: 15px;
-            margin-right: 10px;
-        }
-
-        .columns {
-            display: flex;
-        }
-
-        .columns>* {
-            flex-grow: 1;
-            flex-basis: 20%;
-        }
-
         .hint {
             font-size: .8em;
             color: var(--tg-theme-hint-color, #a8a8a8);
@@ -276,157 +180,6 @@
             color: red;
         }
 
-        .txt {
-            color: var(--tg-theme-text-color, #222);
-        }
-
-        .status_need {
-            display: none;
-        }
-
-        #fixed_wrap {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            transform: translateY(100vh);
-        }
-
-        .viewport-container {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: var(--tg-viewport-stable-height, 100vh);
-            transition: height .2s ease;
-        }
-
-        .viewport-container .main-container {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .viewport-container .main-container button {
-            width: auto;
-        }
-
-        .viewport-border,
-        .viewport-stable-border {
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: var(--tg-viewport-height, 100vh);
-            pointer-events: none;
-        }
-
-        .viewport-stable-border {
-            height: var(--tg-viewport-stable-height, 100vh);
-        }
-
-        .safe-area-border {
-            position: fixed;
-            left: env(safe-area-inset-left, -1000px);
-            right: env(safe-area-inset-right, -1000px);
-            top: env(safe-area-inset-top, -1000px);
-            bottom: env(safe-area-inset-bottom, -1000px);
-            pointer-events: none;
-        }
-
-        .tg-safe-area-border {
-            position: fixed;
-            left: var(--tg-safe-area-inset-left, 0);
-            right: var(--tg-safe-area-inset-right, 0);
-            top: var(--tg-safe-area-inset-top, 0);
-            bottom: var(--tg-safe-area-inset-bottom, 0);
-            pointer-events: none;
-        }
-
-        .tg-content-safe-area-border {
-            position: absolute;
-            left: var(--tg-content-safe-area-inset-left, 0);
-            right: var(--tg-content-safe-area-inset-right, 0);
-            top: var(--tg-content-safe-area-inset-top, 0);
-            bottom: var(--tg-content-safe-area-inset-bottom, 0);
-            pointer-events: none;
-        }
-
-        .viewport-border:before,
-        .viewport-stable-border:before,
-        .safe-area-border:before,
-        .tg-safe-area-border:before,
-        .tg-content-safe-area-border:before {
-            content: attr(text);
-            display: inline-block;
-            position: absolute;
-            background: gray;
-            right: 0;
-            top: 0;
-            font-size: 7px;
-            padding: 2px 4px;
-            vertical-align: top;
-        }
-
-        .viewport-stable-border:before {
-            background: green;
-            left: 0;
-            right: auto;
-        }
-
-        .safe-area-border:before {
-            content: 'safe-area';
-            background: darkorange;
-            right: 180px;
-        }
-
-        .tg-safe-area-border:before {
-            content: 'tg-safe-area';
-            background: orange;
-            right: 50px;
-        }
-
-        .tg-content-safe-area-border:before {
-            content: 'tg-content-safe-area';
-            background: coral;
-            right: 100px;
-        }
-
-        .viewport-border:after,
-        .viewport-stable-border:after,
-        .safe-area-border:after,
-        .tg-safe-area-border:after,
-        .tg-content-safe-area-border:after {
-            content: '';
-            display: block;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            border: 2px dashed gray;
-        }
-
-        .viewport-stable-border:after {
-            border-color: green;
-        }
-
-        .safe-area-border:after {
-            border-color: darkorange;
-        }
-
-        .tg-safe-area-border:after {
-            border-color: orange;
-        }
-
-        .tg-content-safe-area-border:after {
-            border-color: coral;
-        }
     </style>
 </head>
 
