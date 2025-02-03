@@ -788,7 +788,7 @@
                 Telegram.WebApp.onEvent('themeChanged', function () {
                     document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
                 });
-                document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
+                document.getElementById('webview_data').innerHTML = DemoApp.initDataUnsafe.user.first_name;
                 document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
             }
         };
