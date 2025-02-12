@@ -1,218 +1,739 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football Live Streaming</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="MobileOptimized" content="176" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="robots" content="noindex,nofollow" />
+    <script src="https://telegram.org/js/telegram-web-app.js?2"></script>
+    <script>
+        function setThemeClass() {
+            document.documentElement.className = Telegram.WebApp.colorScheme;
+        }
+
+        Telegram.WebApp.onEvent('themeChanged', setThemeClass);
+        setThemeClass();
+
+    </script>
+    <title></title>
     <style>
+        html {
+            overscroll-behavior-x: none;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #121212;
-            color: white;
-            text-align: center;
+            --bg-color: var(--tg-theme-bg-color, #fff);
+            font-family: sans-serif;
+            /*  background-color: var(--bg-color);*/
+            background: transparent linear-gradient(180deg, var(--bg-color) 0%, var(--bg-color) 100%) no-repeat;
+            color: var(--tg-theme-text-color, #222);
+            font-size: 14px;
             margin: 0;
             padding: 0;
+            color-scheme: var(--tg-color-scheme);
         }
-        .header {
-            background: #222;
-            padding: 20px;
-            font-size: 24px;
-            font-weight: bold;
+
+        body.gray {
+            /*  background-color: var(--tg-theme-secondary-bg-color, #efefef);*/
+            background: transparent linear-gradient(180deg, var(--tg-theme-secondary-bg-color, #efefef) 0%, var(--tg-theme-secondary-bg-color, #efefef) 100%) no-repeat;
         }
-        .loading {
-            font-size: 20px;
-            margin: 20px;
-            color: #ffcc00;
+
+        a {
+            color: var(--tg-theme-link-color, #2678b6);
         }
-        .match-list {
-            margin: 20px auto;
-            max-width: 600px;
+
+        .btn {
+            font-size: 14px;
+            padding: 10px 17px;
         }
-        .match-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #1e1e1e;
+
+        .btn-primary {
+            background-color: var(--tg-theme-button-color, #50a8eb);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+        }
+
+        .main-container {
             padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            cursor: pointer;
+        }
+
+        .list-header {
+            text-transform: uppercase;
+            font-size: .92em;
+            color: var(--tg-theme-hint-color, #ccc);
+            margin: 0 0 10px;
+        }
+
+        a.list-group-item,
+        button.list-group-item {
+            color: var(--tg-theme-text-color, #222);
+        }
+
+        .main-container p {
+            margin: 0 0 10px;
+        }
+
+        .main-container pre,
+        .main-container>.btn {
+            margin: 0 0 7px;
+        }
+
+        .main-container pre+.hint,
+        .main-container>.btn+.hint {
             text-align: center;
-            position: relative;
+            margin: 0 0 15px;
         }
-        .team-logos {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        button {
+            display: block;
             width: 100%;
-        }
-        .team-logos img {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-        }
-        .vs-text {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .league-name {
-            font-size: 16px;
-            margin-top: 5px;
-            color: #ddd;
-        }
-        .match-time {
-            font-size: 16px;
-            font-weight: bold;
-            color: #ffcc00;
-        }
-        .live-indicator {
-            width: 50px;
-            margin-top: 5px;
-        }
-        .video-container {
-            display: none;
-            padding: 20px;
-        }
-        video {
-            width: 100%;
-            border-radius: 10px;
-        }
-        .server-buttons {
-            margin-top: 10px;
-        }
-        .server-buttons button {
-            background: #ffcc00;
-            color: black;
-            padding: 10px;
-            margin: 5px;
-            border: none;
-            cursor: pointer;
             font-size: 14px;
-            border-radius: 5px;
-        }
-        .back-button {
-            background: red;
-            color: white;
-            padding: 10px;
-            margin-top: 10px;
+            margin: 15px 0;
+            padding: 12px 20px;
             border: none;
+            border-radius: 4px;
+            background-color: var(--tg-theme-button-color, #50a8eb);
+            color: var(--tg-theme-button-text-color, #fff);
             cursor: pointer;
-            font-size: 14px;
-            border-radius: 5px;
         }
+
+        button[disabled] {
+            opacity: 0.6;
+            cursor: auto;
+            pointer-events: none;
+        }
+
+        button.close_btn {
+            /*position: fixed;*/
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 0;
+            margin: 0;
+            padding: 16px 20px;
+            text-transform: uppercase;
+        }
+
+        section {
+            padding: 15px;
+            text-align: center;
+            background-color: var(--bg-color, #ffffff);
+            padding-left: calc(var(--tg-safe-area-inset-left, 0px) + var(--tg-content-safe-area-inset-left, 0px) + 15px);
+            padding-right: calc(var(--tg-safe-area-inset-right, 0px) + var(--tg-content-safe-area-inset-right, 0px) + 15px);
+        }
+
+        section#top_sect {
+            background-color: var(--header-color, var(--tg-theme-bg-color, #ffffff));
+            padding-top: calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px) + 15px);
+        }
+
+        section#top_sect.second {
+            background-color: var(--header-color, var(--tg-theme-secondary-bg-color, #efefef));
+        }
+
+        section .sect_row {
+            margin: 10px 0;
+        }
+
+        section+section {
+            padding: 0 15px 65px;
+        }
+
+        p {
+            margin: 40px 0 15px;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, .07);
+            color: var(--tg-theme-text-color, #222);
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            padding: 8px;
+            margin: 7px 0;
+            word-break: break-all;
+            word-break: break-word;
+            white-space: pre-wrap;
+            text-align: left;
+        }
+
+        .dark pre {
+            background: rgba(255, 255, 255, .15);
+        }
+
+        .hint {
+            font-size: .8em;
+            color: var(--tg-theme-hint-color, #a8a8a8);
+        }
+
+        .ok {
+            color: green;
+        }
+
+        .err {
+            color: red;
+        }
+
     </style>
-<link rel="me" href="https://www.blogger.com/profile/01749747087669730761" />
-<meta name='google-adsense-platform-account' content='ca-host-pub-1556223355139109'/>
-<meta name='google-adsense-platform-domain' content='blogspot.com'/>
 </head>
-<body>
 
-    <div class="header">⚽ Live Football Streaming</div>
+<body class="" style="visibility: hidden;">
 
-    <div id="loading" class="loading">Loading...</div>
+    <section id="top_sect" class="second">
+        <button id="fullscreen_btn" onclick="DemoApp.toggleFullscreen(this);">Change Fullscreen</button>
 
-    <div id="match-list" class="match-list" style="display: none;"></div>
+        <div class="sect_row">Header: <input type="color" id="header_color_input" />
+            <select id="header_color_sel">
+                <option value="bg_color" selected>bg_color</option>
+                <option value="secondary_bg_color">secondary_bg_color</option>
+                <option value="custom" id="header_color_val">custom...</option>
+            </select>
+        </div>
+        <div class="sect_row">Background: <input type="color" id="bg_color_input" />
+            <select id="bg_color_sel">
+                <option value="bg_color" selected>bg_color</option>
+                <option value="secondary_bg_color">secondary_bg_color</option>
+                <option value="custom" id="bg_color_val">custom...</option>
+            </select>
+        </div>
+        <div class="sect_row">Bottom Bar: <input type="color" id="bbar_color_input" />
+            <select id="bbar_color_sel">
+                <option value="bg_color">bg_color</option>
+                <option value="secondary_bg_color">secondary_bg_color</option>
+                <option value="bottom_bar_bg_color" selected>bottom_bar_bg_color</option>
+                <option value="custom" id="bbar_color_val">custom...</option>
+            </select>
+        </div>
+    </section>
 
-    <div id="video-container" class="video-container">
-        <video id="video-player" controls></video>
-        <div id="server-buttons" class="server-buttons"></div>
-        <button id="back-button" class="back-button">Back</button>
-    </div>
+    <section>
+        <div id="btn_status" class="hint" style="display: none;"></div>
 
-    <script>
-        let videoURL = "";
-        let currentMatchServers = [];
-        let isVideoScreen = false;
+        <!-- <p>Test links:</p>
+        <ul>
+            <li><a id="regular_link" href="?nextpage=1">Regular link #1</a> (opens inside webview)</li>
+            <li><a href="javascript:Telegram.WebApp.openLink('https://ton.org/');">Open link in external browser</a>
+            </li>
+            <li><a href="javascript:Telegram.WebApp.openLink('https://google.com/');">web_app_open_link()</a> (opens
+                outside webview)</li>
+        </ul>
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const matchList = document.getElementById("match-list");
-            const loading = document.getElementById("loading");
-            const videoContainer = document.getElementById("video-container");
-            const videoPlayer = document.getElementById("video-player");
-            const serverButtons = document.getElementById("server-buttons");
-            const backButton = document.getElementById("back-button");
+        <p>Test alerts:</p>
+        <div class="columns">
+            <ul>
+                <li><a href="javascript:;" onclick="DemoApp.showAlert('Hello!');">showAlert</a></li>
+                <li><a href="javascript:;" onclick="DemoApp.showConfirm('Are you sure?');">showConfirm</a></li>
+                <li><a href="javascript:;" onclick="DemoApp.showPopup();">showPopup</a></li>
+            </ul>
+        </div> -->
 
-            // Fetch API Data
-            fetch("https://raw.githubusercontent.com/painglay272/hello/refs/heads/main/footballapi.json")
-                .then(response => response.json())
-                .then(data => {
-                    loading.style.display = "none";
-                    matchList.style.display = "block";
-                    
-                    data.forEach(match => {
-                        const div = document.createElement("div");
-                        div.className = "match-item";
-                        div.innerHTML = `
-                            <div class="league-name">🏆 ${match.league_name}</div>
-                            <div class="team-logos">
-                                <img src="${match.home_team_logo}" alt="${match.home_team_name}">
-                                <span class="vs-text">VS</span>
-                                <img src="${match.away_team_logo}" alt="${match.away_team_name}">
-                            </div>
-                            <div class="match-time">${convertTime(match.match_time)}</div>
-                            ${match.servers.length > 0 ? `<img src="https://i.ibb.co/zh4NFD7X/image-search-1738164867840.gif" class="live-indicator">` : ""}
-                        `;
-                        div.onclick = function () {
-                            videoURL = match.servers.length > 0 ? match.servers[0].stream_url : "";
-                                currentMatchServers = match.servers;
-                                matchList.style.display = "none";
-                                videoContainer.style.display = "block";
-                                isVideoScreen = true;
-                                updateServerButtons();
-                                if (videoURL) {
-                                    videoPlayer.src = videoURL;
-                                    videoPlayer.play();
-                                } else {
-                                    alert("ပွဲချိန်နီးမှ ဝင်ကြည့်ပေးပါ");
-                                }
-                        };
-                        matchList.appendChild(div);
-                    });
-                });
 
-            // Convert match_time to 12-hour format
-            function convertTime(timestamp) {
-                const date = new Date(timestamp * 1000);
-                return date.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
-            }
+        <pre><code id="webview_data"></code></pre>
+        <pre><code id="theme_data"></code></pre>
+        <div class="hint">
+            Version: <span id="ver"></span>,
+            platform: <span id="platform"></span>
+        </div>
+        <div class="hint">
+            <span id="cur_activity"></span><span id="prev_activity"></span>
+        </div>
+    </section>
 
-            // Update server buttons
-            function updateServerButtons() {
-                serverButtons.innerHTML = "";
-                currentMatchServers.forEach(server => {
-                    const btn = document.createElement("button");
-                    btn.innerText = server.name;
-                    btn.onclick = function () {
-                        videoPlayer.src = server.stream_url;
-                        videoPlayer.play();
-                    };
-                    serverButtons.appendChild(btn);
-                });
-            }
 
-            // Handle back button
-            backButton.addEventListener("click", function () {
-                videoContainer.style.display = "none";
-                matchList.style.display = "block";
-                isVideoScreen = false;
-            });
+    <script type="application/javascript">
 
-            // Prevent exit on first back press
-            window.addEventListener("popstate", function (event) {
-                if (isVideoScreen) {
-                    videoContainer.style.display = "none";
-                    matchList.style.display = "block";
-                    isVideoScreen = false;
+        /*
+         * This is a demo code for Telegram WebApp for Bots
+         * It contains basic examples of how to use the API
+         * Note: all requests to backend are disabled in this demo, you should use your own backend
+         */
+
+        const DemoApp = {
+            initData: Telegram.WebApp.initData || '',
+            initDataUnsafe: Telegram.WebApp.initDataUnsafe.user || {},
+
+            init: function (options) {
+                document.body.style.visibility = '';
+                Telegram.WebApp.ready();
+                this.fullscreenInit(); // Initialize fullscreen functionality
+            },
+
+            close() {
+                Telegram.WebApp.close();
+            },
+            toggleSwipeBehavior(el) {
+                if (Telegram.WebApp.isVerticalSwipesEnabled) {
+                    Telegram.WebApp.disableVerticalSwipes()
+                    el.innerHTML = 'Enable Vertical Swypes'
                 } else {
-                    if (confirm("Are you sure you want to exit?")) {
-                        window.close();
-                    }
+                    Telegram.WebApp.enableVerticalSwipes()
+                    el.innerHTML = 'Disable Vertical Swypes'
                 }
-            });
+            },
+            fullscreenInit() {
+                Telegram.WebApp.onEvent('fullscreenChanged', function () {
+                    DemoApp.updateFullscreenButton();
+                });
+
+                Telegram.WebApp.onEvent('fullscreenFailed', function (params) {
+                    if (params.error === 'ALREADY_FULLSCREEN') {
+                        // If already in fullscreen, update the button text
+                        DemoApp.updateFullscreenButton();
+                    } else {
+                        DemoApp.showAlert('fullscreenFailed: ' + params.error);
+                    }
+                });
+
+                // Load the fullscreen state from cloud storage
+                Telegram.WebApp.CloudStorage.getItem('fullscreen', function (err, value) {
+                    if (!err && value) {
+                        const fullscreenBtn = document.getElementById('fullscreen_btn');
+                        if (value === 'yes') {
+                            Telegram.WebApp.requestFullscreen();
+                            fullscreenBtn.innerHTML = 'Exit Fullscreen';
+                        } else {
+                            Telegram.WebApp.exitFullscreen();
+                            fullscreenBtn.innerHTML = 'Change Fullscreen';
+                        }
+                    }
+                });
+
+                DemoApp.updateFullscreenButton();
+            },
+            toggleFullscreen(el) {
+                if (Telegram.WebApp.isFullscreen) {
+                    Telegram.WebApp.exitFullscreen();
+                    this.saveFullscreenState('no'); // Save 'no' when exiting fullscreen
+                } else {
+                    Telegram.WebApp.requestFullscreen();
+                    this.saveFullscreenState('yes'); // Save 'yes' when entering fullscreen
+                }
+            },
+            saveFullscreenState(state) {
+                const key = 'fullscreen';
+                const value = state;
+
+                Telegram.WebApp.CloudStorage.setItem(key, value, function (err, saved) {
+                    if (err) {
+                        DemoApp.showAlert('Error: ' + err);
+                    } else if (saved) {
+                        console.log('Fullscreen state saved:', value);
+                    }
+                });
+            },
+            updateFullscreenButton() {
+                const fullscreenBtn = document.getElementById('fullscreen_btn')
+                if (Telegram.WebApp.isFullscreen) {
+                    fullscreenBtn.innerHTML = 'Exit Fullscreen'
+                } else {
+                    fullscreenBtn.innerHTML = 'Change Fullscreen'
+                }
+            },
+
+            // version to string Example: '6.9'
+            doesntSupport(version) {
+                // console.log("version: " + version);
+                // console.log("realVersion: " + this.version());
+                // console.log("doesntSupport: " + this.isVersionAtLeast(version));
+                if (!this.isVersionAtLeast(version)) {
+                    Telegram.WebApp.showAlert('This feature is not supported in this version of Telegram', function () {
+                        Telegram.WebApp.close();
+                    });
+                    throw new Error('This feature is not supported in this version of Telegram');
+                }
+            },
+
+            // actions
+
+            changeMenuButton(close) {
+                document.querySelectorAll('button').forEach((btn) => btn.disabled = true);
+                const btnStatus = document.querySelector('#btn_status');
+                btnStatus.textContent = 'Changing button...';
+
+                DemoApp.apiRequest('changeMenuButton', {}, function (result) {
+                    document.querySelectorAll('button').forEach((btn) => btn.disabled = false);
+
+                    if (result.response) {
+                        if (result.response.ok) {
+                            btnStatus.textContent = 'Button changed!';
+                            btnStatus.className = 'ok';
+                            btnStatus.style.display = 'block';
+                            Telegram.WebApp.close();
+                        } else {
+                            btnStatus.textContent = result.response.description;
+                            btnStatus.className = 'err';
+                            btnStatus.style.display = 'block';
+                            alert(result.response.description);
+                        }
+                    } else if (result.error) {
+                        btnStatus.textContent = result.error;
+                        btnStatus.className = 'err';
+                        btnStatus.style.display = 'block';
+                        alert(result.error);
+                    } else {
+                        btnStatus.textContent = 'Unknown error';
+                        btnStatus.className = 'err';
+                        btnStatus.style.display = 'block';
+                        alert('Unknown error');
+                    }
+                });
+                if (close) {
+                    setTimeout(function () {
+                        Telegram.WebApp.close();
+                    }, 50);
+                }
+            },
+
+            switchInlineQuery(query, chooseChat) {
+                if (chooseChat) {
+                    const chatTypes = []
+                    const types = ['users', 'bots', 'groups', 'channels'];
+                    for (let i = 0; i < types.length; i++) {
+                        const el = document.getElementById('select-' + types[i]);
+                        if (el.checked) {
+                            chatTypes.push(types[i]);
+                        }
+                    }
+
+                    if (!chooseChatTypes.length) {
+                        return DemoApp.showAlert('Select chat types!');
+                    }
+
+                    Telegram.WebApp.switchInlineQuery(query, chatTypes)
+                }
+
+                Telegram.WebApp.switchInlineQuery(query, false)
+            },
+
+            // Alerts
+            showAlert(message) {
+                Telegram.WebApp.showAlert(message);
+            },
+            showConfirm(message) {
+                Telegram.WebApp.showConfirm(message);
+            },
+            isVersionAtLeast(version) {
+                return Telegram.WebApp.isVersionAtLeast(version);
+            },
+            showPopup() {
+                Telegram.WebApp.showPopup({
+                    title: 'Popup title',
+                    message: 'Popup message',
+                    buttons: [
+                        { id: 'delete', type: 'destructive', text: 'Delete all' },
+                        { id: 'faq', type: 'default', text: 'Open FAQ' },
+                        { type: 'cancel' },
+                    ]
+                }, function (buttonId) {
+                    if (buttonId === 'delete') {
+                        DemoApp.showAlert("'Delete all' selected");
+                    } else if (buttonId === 'faq') {
+                        Telegram.WebApp.openLink('https://telegram.org/faq');
+                    }
+                });
+            },
+
+            // Permissions
+
+        
+            // biometrics
+
+            // home screen
+
+
+            // emoji status
+
+            // activity
+            activityStartTime: new Date(),
+            activityPrevDuration: false,
+            activityTo: null,
+            activityInit: function () {
+                Telegram.WebApp.onEvent('activated', function (params) {
+                    DemoApp.activityStartTime = new Date();
+                    DemoApp.activityUpdate();
+                });
+
+                Telegram.WebApp.onEvent('deactivated', function (params) {
+                    DemoApp.activityPrevDuration = new Date() - DemoApp.activityStartTime;
+                    DemoApp.activityStartTime = false;
+                    clearTimeout(DemoApp.activityTo);
+                    DemoApp.activityUpdate();
+                });
+
+                DemoApp.activityUpdate();
+            },
+            activityUpdate: function () {
+                const curActivityElement = document.getElementById('cur_activity');
+                const prevActivityElement = document.getElementById('prev_activity');
+
+                if (Telegram.WebApp.isActive) {
+                    const nowDuration = new Date() - DemoApp.activityStartTime;
+                    curActivityElement.innerHTML = 'Mini App is active for <b>' + Math.round(nowDuration / 1000) + '</b> sec';
+                    DemoApp.activityTo = setTimeout(DemoApp.activityUpdate, 100);
+                } else {
+                    curActivityElement.innerHTML = 'Mini App is <b>inactive</b>';
+                }
+
+                if (DemoApp.activityPrevDuration !== false) {
+                    const prevDuration = DemoApp.activityPrevDuration;
+                    prevActivityElement.innerHTML = ', <br>previously was active for <b>' + Math.round(prevDuration / 1000) + '</b> sec';
+                }
+            },
+
+
+            // Other
+            apiRequest(method, data, onCallback) {
+                // DISABLE BACKEND FOR FRONTEND DEMO
+                // YOU CAN USE YOUR OWN REQUESTS TO YOUR OWN BACKEND
+                // CHANGE THIS CODE TO YOUR OWN
+                return onCallback && onCallback({ error: 'This function (' + method + ') should send requests to your backend. Please, change this code to your own.' });
+
+                const authData = DemoApp.initData || '';
+                fetch('/demo/api', {
+                    method: 'POST',
+                    body: JSON.stringify(Object.assign(data, {
+                        _auth: authData,
+                        method: method,
+                    })),
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (result) {
+                    onCallback && onCallback(result);
+                }).catch(function (error) {
+                    onCallback && onCallback({ error: 'Server error' });
+                });
+            },
+            downloadFile: function (el, url, file_name) {
+                Telegram.WebApp.downloadFile({ url: url, file_name: file_name }, function (result) {
+                    const span = el.nextElementSibling;
+                    if (result) {
+                        span.textContent = '(downloading...)';
+                        span.className = 'ok';
+                    } else {
+                        span.textContent = '(declined)';
+                        span.className = 'err';
+                    }
+                });
+            },
+        }
+
+        const DemoAppMenu = {
+            init() {
+                DemoApp.init();
+                document.body.classList.add('gray');
+                Telegram.WebApp.setHeaderColor('secondary_bg_color');
+            }
+        };
+
+        const DemoAppInitData = {
+            init() {
+                DemoApp.init();
+                Telegram.WebApp.onEvent('themeChanged', function () {
+                    document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
+                });
+                document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
+                document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
+            }
+        };
+
+        function cleanHTML(value) {
+            return value
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/\n/g, '<br/>')
+        }
+
+        function byteLength(str) {
+            if (window.Blob) {
+                try {
+                    return new Blob([str]).size;
+                } catch (e) {
+                }
+            }
+
+            let s = str.length;
+            for (let i = str.length - 1; i >= 0; i--) {
+                const code = str.charCodeAt(i);
+                if (code > 0x7f && code <= 0x7ff) {
+                    s++;
+                } else if (code > 0x7ff && code <= 0xffff) {
+                    s += 2;
+                }
+
+                if (code >= 0xDC00 && code <= 0xDFFF) {
+                    i--;
+                }
+            }
+            return s;
+        }
+
+        function round(val, d) {
+            const k = Math.pow(10, d || 0);
+            return Math.round(val * k) / k;
+        }
+    </script>
+
+    <script type="application/javascript">
+        /*
+         * This part of code is used to initialize the demo app and set up the event handlers we need.
+         */
+
+        Telegram.WebApp.onEvent('themeChanged', function () {
+            document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
         });
+
+        document.getElementById('webview_data').innerHTML = JSON.stringify(DemoApp.initDataUnsafe, null, 2);
+
+        document.getElementById('theme_data').innerHTML = JSON.stringify(Telegram.WebApp.themeParams, null, 2);
+        //document.getElementById('regular_link').setAttribute('href', document.getElementById('regular_link').getAttribute('href') + location.hash);
+
+
+        document.getElementById('ver').innerHTML = Telegram.WebApp.version;
+        document.getElementById('platform').innerHTML = Telegram.WebApp.platform;
+
+        DemoApp.init();
+        Telegram.WebApp.setHeaderColor('secondary_bg_color');
+
+        // bg color picker
+        const bgColorSel = document.getElementById('bg_color_sel')
+        const bgColorInput = document.getElementById('bg_color_input')
+        let prevBgColorValue = bgColorSel.value
+        bgColorInput.value = Telegram.WebApp.backgroundColor
+        document.body.style.setProperty('--bg-color', Telegram.WebApp.backgroundColor)
+
+        bgColorInput.addEventListener('change', function (e) {
+            const color = e.target.value;
+            document.getElementById('bg_color_val').textContent = color;
+            bgColorSel.value = 'custom';
+            prevBgColorValue = bgColorSel.value;
+            Telegram.WebApp.setBackgroundColor(color);
+            document.body.style.setProperty('--bg-color', Telegram.WebApp.backgroundColor);
+        })
+
+        bgColorSel.addEventListener('change', function (e) {
+            const color = e.target.value;
+            if (color === 'custom') {
+                bgColorSel.value = prevBgColorValue;
+                const input = bgColorInput;
+                input.focus();
+                input.click();
+            } else {
+                document.getElementById('bg_color_val').textContent = 'custom...';
+                Telegram.WebApp.setBackgroundColor(color);
+                document.body.style.setProperty('--bg-color', Telegram.WebApp.backgroundColor);
+                bgColorInput.value = Telegram.WebApp.backgroundColor;
+                prevBgColorValue = bgColorSel.value;
+            }
+        })
+
+        // header color picker
+        const headerColorSel = document.getElementById('header_color_sel')
+        const headerColorInput = document.getElementById('header_color_input')
+        let prevHeaderColorValue = headerColorSel.value
+        headerColorInput.value = Telegram.WebApp.headerColor
+        document.body.style.setProperty('--header-color', Telegram.WebApp.headerColor)
+
+        headerColorSel.value = 'secondary_bg_color'
+
+        headerColorInput.addEventListener('change', function (e) {
+            const color = e.target.value;
+            document.getElementById('header_color_val').textContent = color;
+            headerColorSel.value = 'custom';
+            prevHeaderColorValue = headerColorSel.value;
+            Telegram.WebApp.setHeaderColor(color);
+            document.body.style.setProperty('--header-color', Telegram.WebApp.headerColor);
+        })
+
+        headerColorSel.addEventListener('change', function (e) {
+            const color = e.target.value;
+            if (color === 'custom') {
+                headerColorSel.value = prevHeaderColorValue;
+                const input = headerColorInput;
+                input.focus();
+                input.click();
+            } else {
+                document.getElementById('header_color_val').textContent = 'custom...';
+                Telegram.WebApp.setHeaderColor(color);
+                document.getElementById('top_sect').classList.toggle('second', color === 'secondary_bg_color');
+                document.body.style.setProperty('--header-color', Telegram.WebApp.headerColor);
+                headerColorInput.value = Telegram.WebApp.headerColor;
+                prevHeaderColorValue = headerColorSel.value;
+            }
+        })
+
+        // bottom bar color picker
+        const bbarColorSel = document.getElementById('bbar_color_sel')
+        const bbarColorInput = document.getElementById('bbar_color_input')
+        let prevBbarColorValue = bbarColorSel.value;
+        bbarColorInput.value = Telegram.WebApp.bottomBarColor;
+        document.body.style.setProperty('--bottom-bar-color', Telegram.WebApp.bottomBarColor);
+
+        bbarColorInput.addEventListener('change', function (e) {
+            const color = e.target.value;
+            document.getElementById('bbar_color_val').textContent = color;
+            bbarColorSel.value = 'custom';
+            prevBbarColorValue = bbarColorSel.value;
+            Telegram.WebApp.setBottomBarColor(color);
+            document.body.style.setProperty('--bottom-bar-color', Telegram.WebApp.bottomBarColor);
+        })
+
+        bbarColorSel.addEventListener('change', function (e) {
+            const color = e.target.value;
+            if (color === 'custom') {
+                bbarColorSel.value = prevBbarColorValue;
+                const input = bbarColorInput;
+                input.focus();
+                input.click();
+            } else {
+                document.getElementById('bbar_color_val').textContent = 'custom...';
+                Telegram.WebApp.setBottomBarColor(color);
+                document.body.style.setProperty('--bottom-bar-color', Telegram.WebApp.bottomBarColor);
+                bbarColorInput.value = Telegram.WebApp.bottomBarColor;
+                prevBbarColorValue = bbarColorSel.value;
+            }
+        })
+
+        // theme
+        Telegram.WebApp.onEvent('themeChanged', function () {
+            bgColorInput.value = Telegram.WebApp.backgroundColor
+            document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor)
+        })
+
+        // permissions
+
+        // permissions
+        try {
+            DemoApp.testClipboard(document.getElementById('clipboard_test'));
+        } catch (e) { }
+        try {
+            DemoApp.loadCloudKeys();
+        } catch (e) { }
+        try {
+            DemoApp.fullscreenInit();
+        } catch (e) { }
+        try {
+            DemoApp.deviceOrientationInit();
+        } catch (e) { }
+        try {
+            DemoApp.homeScreenInit();
+        } catch (e) { }
+        try {
+            DemoApp.activityInit();
+        } catch (e) { }
     </script>
 
 </body>
+
 </html>
